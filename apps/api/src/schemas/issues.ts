@@ -5,7 +5,7 @@ import { LabelSchema } from './labels';
 import { ProjectKeyParamsSchema } from './projects';
 import { UserSchema } from './users';
 
-export const IssueSchema = Type.Object({
+const IssueSchema = Type.Object({
   id: Type.Integer(),
   identifier: Type.String(),
   projectKey: Type.String(),

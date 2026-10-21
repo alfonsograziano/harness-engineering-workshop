@@ -4,7 +4,7 @@ import { Type } from 'typebox';
 import { ErrorResponseSchema, IsoDateSchema } from './common';
 import { ProjectKeyParamsSchema } from './projects';
 
-export const MilestoneSchema = Type.Object({
+const MilestoneSchema = Type.Object({
   id: Type.Integer(),
   projectKey: Type.String(),
   name: Type.String(),

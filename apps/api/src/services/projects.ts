@@ -30,5 +30,3 @@ export function createProjectService(projects: ProjectRepository) {
     },
   };
 }
-
-export type ProjectService = ReturnType<typeof createProjectService>;

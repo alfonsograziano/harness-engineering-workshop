@@ -19,7 +19,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p . && npm run typecheck --workspaces --if-present",
     "lint": "biome check .",
-    "format": "biome check --write ."
+    "format": "biome check --write .",
+    "knip": "knip"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
@@ -28,6 +29,7 @@
     "@testing-library/user-event": "^14.6.8",
     "concurrently": "^9.2.5",
     "jsdom": "^29.1.1",
+    "knip": "^6.42.1",
     "typescript": "~5.9.3",
     "vitest": "^5.0.5"
   }

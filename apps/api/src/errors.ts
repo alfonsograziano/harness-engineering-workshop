@@ -5,7 +5,7 @@ import type { FastifyError, FastifyInstance } from 'fastify';
  * An error we expect and know how to describe to the client.
  * Services throw these; the central error handler turns them into the shared error format.
  */
-export class AppError extends Error {
+class AppError extends Error {
   readonly statusCode: number;
   readonly code: string;
   readonly details?: unknown;

@@ -11,7 +11,7 @@ const CREATED_AT = '2026-01-15T09:00:00.000Z';
  * A fresh in-memory database with the real migrations and a small, known fixture:
  * two users, the WEB and API projects, and one issue (WEB-1).
  */
-export async function createTestDatabase() {
+async function createTestDatabase() {
   const { db, sqlite } = createDatabase(':memory:');
   await runMigrations(db, sqlite, config.migrationsFolder);
 

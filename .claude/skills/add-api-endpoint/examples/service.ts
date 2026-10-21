@@ -55,5 +55,3 @@ export function createMilestoneService({ milestones, projects }: MilestoneServic
     },
   };
 }
-
-export type MilestoneService = ReturnType<typeof createMilestoneService>;

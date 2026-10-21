@@ -67,5 +67,3 @@ export function createLabelService({ labels, projects, issues }: LabelServiceDep
     },
   };
 }
-
-export type LabelService = ReturnType<typeof createLabelService>;

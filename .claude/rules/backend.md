@@ -29,7 +29,7 @@ app.get('/issues/:identifier', { schema: getIssueSchema }, async (request) => {
 
 ## Services: `src/services/<resource>.ts`
 
-- Export `create<Resource>Service(deps)` that returns an object of async methods, plus `export type <Resource>Service = ReturnType<...>`. Wire it in `src/services/index.ts`.
+- Export `create<Resource>Service(deps)` that returns an object of async methods, and wire it in `src/services/index.ts`. Export `type <Resource>Service = ReturnType<...>` only when another service takes it as a dependency; `npm run knip` flags an export nobody uses.
 - Services take repositories and other services as arguments. They never import `db/` or `drizzle-orm`, and never see `request` or `reply`.
 - Services return the shared API types from `@tasklane/shared`, never raw database rows. Map rows with a small `to<Resource>()` function.
 - Throw `NotFoundError(resource, id)` or `BadRequestError(message)` from `src/errors.ts`. For a new kind of error, add an `AppError` subclass with its own `code`.
@@ -37,7 +37,7 @@ app.get('/issues/:identifier', { schema: getIssueSchema }, async (request) => {
 
 ## Repositories: `src/repositories/<resource>.ts`
 
-- Export `create<Resource>Repository(db: Database)` and its `ReturnType`. This is the only layer that imports `drizzle-orm` and `db/schema`.
+- Export `create<Resource>Repository(db: Database)` and its `ReturnType` (services take it as a dependency). This is the only layer that imports `drizzle-orm` and `db/schema`.
 - Return `rows[0] ?? null` for single lookups. Do not throw "not found" here; that is the service's job.
 - Keep queries in one statement when two requests could race, like `reserveIssueNumber()`.
 

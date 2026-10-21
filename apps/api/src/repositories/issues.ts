@@ -15,7 +15,6 @@ const issueWithPeople = {
   creator: { id: creator.id, name: creator.name, email: creator.email },
 };
 
-export type IssueRow = typeof issues.$inferSelect;
 export type NewIssueRow = typeof issues.$inferInsert;
 
 export interface IssueFilters {
