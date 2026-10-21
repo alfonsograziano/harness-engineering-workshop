@@ -1,5 +1,5 @@
-import type { Project } from '@tasklane/shared';
 import { useQuery } from '@tanstack/react-query';
+import type { Project } from '@tasklane/shared';
 import { apiRequest } from './client';
 import { queryKeys } from './query-keys';
 

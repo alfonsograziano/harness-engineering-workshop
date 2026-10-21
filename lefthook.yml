@@ -1,0 +1,21 @@
+# Git hooks for humans and agents alike. Installed by `npm install` (the "prepare" script).
+# Docs: https://lefthook.dev
+pre-commit:
+  parallel: true
+  jobs:
+    - name: lint
+      glob: "*.{ts,tsx,js,mjs,cjs,json,css}"
+      run: npx biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+
+    - name: typecheck
+      glob: "*.{ts,tsx}"
+      run: npm run typecheck
+
+    - name: secrets
+      run: |
+        if ! command -v gitleaks >/dev/null 2>&1; then
+          echo "gitleaks is not installed, so the local secret scan was skipped. CI still runs it."
+          echo "Install it to scan before you commit: brew install gitleaks (or see https://github.com/gitleaks/gitleaks)"
+          exit 0
+        fi
+        gitleaks git --pre-commit --staged --redact --no-banner

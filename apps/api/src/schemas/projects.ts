@@ -1,7 +1,7 @@
 import { Type } from 'typebox';
 import { ErrorResponseSchema, IsoDateSchema } from './common';
 
-export const ProjectSchema = Type.Object({
+const ProjectSchema = Type.Object({
   id: Type.Integer(),
   key: Type.String(),
   name: Type.String(),

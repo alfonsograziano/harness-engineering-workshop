@@ -1,13 +1,14 @@
-import type { CreateIssueInput, Issue, UpdateIssueInput } from '@tasklane/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { CreateIssueInput, Issue, UpdateIssueInput } from '@tasklane/shared';
 import { useCurrentUser } from '../lib/current-user';
 import { apiRequest } from './client';
 import { queryKeys } from './query-keys';
 
-export function useIssues(projectKey: string) {
+export function useIssues(projectKey: string, filters: { labelId?: number } = {}) {
+  const search = filters.labelId ? `?labelId=${filters.labelId}` : '';
   return useQuery({
-    queryKey: queryKeys.projectIssues(projectKey),
-    queryFn: () => apiRequest<Issue[]>(`/projects/${projectKey}/issues`),
+    queryKey: queryKeys.filteredProjectIssues(projectKey, filters),
+    queryFn: () => apiRequest<Issue[]>(`/projects/${projectKey}/issues${search}`),
   });
 }
 

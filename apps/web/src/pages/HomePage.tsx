@@ -12,8 +12,9 @@ export function HomePage() {
   if (!projects) {
     return <div className="muted padded">Loading…</div>;
   }
-  if (projects.length === 0) {
+  const [firstProject] = projects;
+  if (!firstProject) {
     return <div className="muted padded">No projects yet. Run `npm run db:seed`.</div>;
   }
-  return <Navigate to={`/projects/${projects[0].key}`} replace />;
+  return <Navigate to={`/projects/${firstProject.key}`} replace />;
 }

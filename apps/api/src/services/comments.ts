@@ -46,5 +46,3 @@ export function createCommentService({ comments, issues, users }: CommentService
     },
   };
 }
-
-export type CommentService = ReturnType<typeof createCommentService>;

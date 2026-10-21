@@ -4,6 +4,7 @@ import {
   createIssueSchema,
   getIssueSchema,
   listProjectIssuesSchema,
+  setIssueLabelsSchema,
   updateIssueSchema,
 } from '../schemas/issues';
 
@@ -13,11 +14,7 @@ export const issueRoutes: FastifyPluginAsyncTypebox = async (app) => {
   });
 
   app.post('/projects/:key/issues', { schema: createIssueSchema }, async (request, reply) => {
-    const issue = await app.services.issues.create(
-      request.params.key,
-      request.body,
-      getCurrentUserId(request),
-    );
+    const issue = await app.services.issues.create(request.params.key, request.body, getCurrentUserId(request));
     return reply.status(201).send(issue);
   });
 
@@ -27,5 +24,9 @@ export const issueRoutes: FastifyPluginAsyncTypebox = async (app) => {
 
   app.patch('/issues/:identifier', { schema: updateIssueSchema }, async (request) => {
     return app.services.issues.update(request.params.identifier, request.body);
+  });
+
+  app.put('/issues/:identifier/labels', { schema: setIssueLabelsSchema }, async (request) => {
+    return app.services.labels.setIssueLabels(request.params.identifier, request.body);
   });
 };

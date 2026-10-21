@@ -12,8 +12,9 @@ export function formatIssueIdentifier(projectKey: string, issueNumber: number): 
 /** Splits `WEB-12` into its project key and issue number. Returns null when the format is wrong. */
 export function parseIssueIdentifier(identifier: string): { projectKey: string; number: number } | null {
   const match = /^([A-Z][A-Z0-9]*)-(\d+)$/.exec(identifier);
-  if (!match) {
+  const [, projectKey, issueNumber] = match ?? [];
+  if (!projectKey || !issueNumber) {
     return null;
   }
-  return { projectKey: match[1], number: Number(match[2]) };
+  return { projectKey, number: Number(issueNumber) };
 }

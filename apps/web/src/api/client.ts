@@ -1,7 +1,7 @@
 import type { ApiErrorResponse } from '@tasklane/shared';
 
 /** An error response from the API, in the shared `{ error: { code, message } }` format. */
-export class ApiError extends Error {
+class ApiError extends Error {
   readonly status: number;
   readonly code: string;
 

@@ -5,6 +5,7 @@ import { useProject } from '../api/projects';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { IssueBoard } from '../components/IssueBoard';
 import { IssueList } from '../components/IssueList';
+import { LabelFilter } from '../components/LabelFilter';
 import { NewIssueForm } from '../components/NewIssueForm';
 import { type IssueView, ViewToggle } from '../components/ViewToggle';
 
@@ -14,8 +15,22 @@ export function ProjectPage() {
   const [isCreating, setIsCreating] = useState(false);
 
   const project = useProject(projectKey);
-  const issues = useIssues(projectKey);
   const view: IssueView = searchParams.get('view') === 'board' ? 'board' : 'list';
+  const labelId = Number(searchParams.get('label')) || undefined;
+  const issues = useIssues(projectKey, { labelId });
+
+  // The view and the label filter live in the URL, so a reload or a shared link keeps them.
+  function updateSearch(name: 'view' | 'label', value: string | undefined) {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      if (value) {
+        next.set(name, value);
+      } else {
+        next.delete(name);
+      }
+      return next;
+    });
+  }
 
   if (project.error) {
     return <ErrorMessage error={project.error} />;
@@ -29,7 +44,12 @@ export function ProjectPage() {
           <p className="project__description">{project.data?.description}</p>
         </div>
         <div className="project__actions">
-          <ViewToggle value={view} onChange={(next) => setSearchParams(next === 'list' ? {} : { view: next })} />
+          <LabelFilter
+            projectKey={projectKey}
+            value={labelId}
+            onChange={(next) => updateSearch('label', next ? String(next) : undefined)}
+          />
+          <ViewToggle value={view} onChange={(next) => updateSearch('view', next === 'list' ? undefined : next)} />
           <button type="button" className="button button--primary" onClick={() => setIsCreating(true)}>
             New issue
           </button>

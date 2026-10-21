@@ -8,10 +8,12 @@ import {
 import { NotFoundError } from '../errors';
 import { nowIso } from '../lib/time';
 import type { IssueFilters, IssueRecord, IssueRepository } from '../repositories/issues';
+import type { LabelRepository, LabelRow } from '../repositories/labels';
 import type { ProjectRepository } from '../repositories/projects';
+import { toLabel } from './labels';
 import type { UserService } from './users';
 
-function toIssue(record: IssueRecord): Issue {
+function toIssue(record: IssueRecord, labels: LabelRow[]): Issue {
   const { issue } = record;
   return {
     id: issue.id,
@@ -24,6 +26,7 @@ function toIssue(record: IssueRecord): Issue {
     priority: issue.priority,
     assignee: record.assignee,
     creator: record.creator,
+    labels: labels.map(toLabel),
     createdAt: issue.createdAt,
     updatedAt: issue.updatedAt,
   };
@@ -31,11 +34,31 @@ function toIssue(record: IssueRecord): Issue {
 
 interface IssueServiceDeps {
   issues: IssueRepository;
+  labels: LabelRepository;
   projects: ProjectRepository;
   users: UserService;
 }
 
-export function createIssueService({ issues, projects, users }: IssueServiceDeps) {
+export function createIssueService({ issues, labels, projects, users }: IssueServiceDeps) {
+  /** Loads the labels of all the records in one query and builds the API objects. */
+  async function withLabels(records: IssueRecord[]): Promise<Issue[]> {
+    const rows = await labels.listForIssues(records.map((record) => record.issue.id));
+    return records.map((record) =>
+      toIssue(
+        record,
+        rows.filter((row) => row.issueId === record.issue.id).map((row) => row.label),
+      ),
+    );
+  }
+
+  async function withLabel(record: IssueRecord): Promise<Issue> {
+    const rows = await labels.listForIssues([record.issue.id]);
+    return toIssue(
+      record,
+      rows.map((row) => row.label),
+    );
+  }
+
   async function findProject(projectKey: string) {
     const project = await projects.findByKey(projectKey);
     if (!project) {
@@ -59,7 +82,7 @@ export function createIssueService({ issues, projects, users }: IssueServiceDeps
     if (!record) {
       throw new NotFoundError('Issue', id);
     }
-    return toIssue(record);
+    return withLabel(record);
   }
 
   return {
@@ -67,12 +90,11 @@ export function createIssueService({ issues, projects, users }: IssueServiceDeps
 
     async listForProject(projectKey: string, filters: IssueFilters = {}): Promise<Issue[]> {
       const project = await findProject(projectKey);
-      const records = await issues.listByProject(project.id, filters);
-      return records.map(toIssue);
+      return withLabels(await issues.listByProject(project.id, filters));
     },
 
     async getByIdentifier(identifier: string): Promise<Issue> {
-      return toIssue(await findRecord(identifier));
+      return withLabel(await findRecord(identifier));
     },
 
     async create(projectKey: string, input: CreateIssueInput, creatorId: number): Promise<Issue> {

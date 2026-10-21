@@ -3,7 +3,7 @@ import { ErrorResponseSchema, IsoDateSchema } from './common';
 import { IssueIdentifierParamsSchema } from './issues';
 import { UserSchema } from './users';
 
-export const CommentSchema = Type.Object({
+const CommentSchema = Type.Object({
   id: Type.Integer(),
   body: Type.String(),
   author: UserSchema,

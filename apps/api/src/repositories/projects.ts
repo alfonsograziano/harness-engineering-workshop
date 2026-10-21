@@ -1,5 +1,6 @@
 import { asc, eq, sql } from 'drizzle-orm';
 import type { Database } from '../db/client';
+import { singleRow } from '../db/rows';
 import { projects } from '../db/schema';
 
 export function createProjectRepository(db: Database) {
@@ -20,7 +21,7 @@ export function createProjectRepository(db: Database) {
         .set({ issueCounter: sql`${projects.issueCounter} + 1` })
         .where(eq(projects.id, projectId))
         .returning({ issueCounter: projects.issueCounter });
-      return rows[0].issueCounter;
+      return singleRow(rows).issueCounter;
     },
   };
 }

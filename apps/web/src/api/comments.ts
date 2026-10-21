@@ -1,5 +1,5 @@
-import type { Comment, CreateCommentInput } from '@tasklane/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { Comment, CreateCommentInput } from '@tasklane/shared';
 import { useCurrentUser } from '../lib/current-user';
 import { apiRequest } from './client';
 import { queryKeys } from './query-keys';

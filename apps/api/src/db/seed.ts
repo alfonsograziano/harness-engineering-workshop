@@ -1,10 +1,11 @@
 import fs from 'node:fs';
-import type { IssuePriority, IssueStatus } from '@tasklane/shared';
+import type { IssuePriority, IssueStatus, LabelColor } from '@tasklane/shared';
 import { config } from '../config';
 import { toIso } from '../lib/time';
 import { createDatabase } from './client';
 import { runMigrations } from './migrate';
-import { comments, issues, projects, users } from './schema';
+import { singleRow } from './rows';
+import { comments, issueLabels, issues, labels, projects, users } from './schema';
 
 // Resets the local database and fills it with realistic data, so the app looks alive on first run.
 
@@ -26,6 +27,14 @@ const seedProjects = [
   { key: 'MOB', name: 'Mobile', description: 'iOS and Android apps.' },
 ];
 
+const seedLabels: { name: string; color: LabelColor }[] = [
+  { name: 'bug', color: '#eb5757' },
+  { name: 'feature', color: '#5e6ad2' },
+  { name: 'design', color: '#bb87fc' },
+  { name: 'performance', color: '#f2994a' },
+  { name: 'tech-debt', color: '#95a2b3' },
+];
+
 interface SeedIssue {
   project: string;
   title: string;
@@ -35,6 +44,7 @@ interface SeedIssue {
   assignee?: number;
   creator: number;
   age: number;
+  labels?: string[];
   comments?: { author: number; body: string }[];
 }
 
@@ -49,6 +59,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 1,
     creator: 3,
     age: 2,
+    labels: ['bug'],
     comments: [
       { author: 3, body: 'Reproduced on two different Macs. Support has 14 tickets about this since Monday.' },
       { author: 1, body: 'Looks like the form uses `requestSubmit`, which our polyfill breaks. Working on it.' },
@@ -63,6 +74,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 2,
     creator: 5,
     age: 12,
+    labels: ['feature', 'design'],
     comments: [{ author: 5, body: 'Design tokens for the dark palette are ready in Figma.' }],
   },
   {
@@ -73,6 +85,7 @@ const seedIssues: SeedIssue[] = [
     priority: 'high',
     creator: 4,
     age: 20,
+    labels: ['performance'],
   },
   {
     project: 'WEB',
@@ -92,6 +105,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 2,
     creator: 1,
     age: 18,
+    labels: ['bug'],
   },
   {
     project: 'WEB',
@@ -101,6 +115,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 5,
     creator: 2,
     age: 6,
+    labels: ['design'],
   },
   {
     project: 'WEB',
@@ -110,6 +125,7 @@ const seedIssues: SeedIssue[] = [
     priority: 'none',
     creator: 1,
     age: 30,
+    labels: ['feature'],
   },
   {
     project: 'WEB',
@@ -119,6 +135,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 4,
     creator: 3,
     age: 4,
+    labels: ['bug'],
     comments: [{ author: 4, body: 'The limit is enforced twice, once in nginx with a smaller value.' }],
   },
   {
@@ -128,6 +145,7 @@ const seedIssues: SeedIssue[] = [
     priority: 'medium',
     creator: 5,
     age: 28,
+    labels: ['design', 'tech-debt'],
     comments: [{ author: 5, body: 'Canceled: the design system ships its own date picker next month.' }],
   },
   {
@@ -138,6 +156,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 1,
     creator: 5,
     age: 9,
+    labels: ['design'],
   },
   {
     project: 'API',
@@ -148,6 +167,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 3,
     creator: 2,
     age: 5,
+    labels: ['feature'],
     comments: [
       { author: 2, body: 'Per key please. Several customers share one office IP.' },
       { author: 3, body: 'Agreed. Using a sliding window, 100 requests per minute to start.' },
@@ -161,6 +181,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 4,
     creator: 3,
     age: 1,
+    labels: ['bug'],
   },
   {
     project: 'API',
@@ -178,6 +199,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 3,
     creator: 1,
     age: 15,
+    labels: ['bug'],
   },
   {
     project: 'API',
@@ -197,6 +219,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 2,
     creator: 4,
     age: 3,
+    labels: ['performance'],
   },
   {
     project: 'API',
@@ -205,6 +228,7 @@ const seedIssues: SeedIssue[] = [
     priority: 'low',
     creator: 2,
     age: 29,
+    labels: ['tech-debt'],
   },
   {
     project: 'API',
@@ -215,6 +239,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 4,
     creator: 3,
     age: 11,
+    labels: ['bug', 'tech-debt'],
   },
   {
     project: 'MOB',
@@ -224,6 +249,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 5,
     creator: 1,
     age: 3,
+    labels: ['bug'],
   },
   {
     project: 'MOB',
@@ -233,6 +259,7 @@ const seedIssues: SeedIssue[] = [
     priority: 'medium',
     creator: 5,
     age: 27,
+    labels: ['feature'],
   },
   {
     project: 'MOB',
@@ -242,6 +269,7 @@ const seedIssues: SeedIssue[] = [
     assignee: 1,
     creator: 5,
     age: 1,
+    labels: ['bug'],
     comments: [{ author: 5, body: 'Only happens when the app was killed in the background.' }],
   },
   {
@@ -276,14 +304,36 @@ const userIds = await db
   .returning({ id: users.id })
   .then((rows) => rows.map((row) => row.id));
 
+/** Seed entries refer to users by position (1-5) and to labels by name. A typo there should fail loudly. */
+function required<T>(value: T | undefined, what: string): T {
+  if (value === undefined) {
+    throw new Error(`Seed data refers to an unknown ${what}`);
+  }
+  return value;
+}
+const userId = (position: number) => required(userIds[position - 1], `user #${position}`);
+
 const projectIdsByKey = new Map<string, number>();
+const labelIds = new Map<string, number>();
 for (const project of seedProjects) {
   const issueCount = seedIssues.filter((issue) => issue.project === project.key).length;
-  const [row] = await db
-    .insert(projects)
-    .values({ ...project, issueCounter: issueCount, createdAt: daysAgo(40) })
-    .returning({ id: projects.id });
+  const row = singleRow(
+    await db
+      .insert(projects)
+      .values({ ...project, issueCounter: issueCount, createdAt: daysAgo(40) })
+      .returning({ id: projects.id }),
+  );
   projectIdsByKey.set(project.key, row.id);
+
+  for (const label of seedLabels) {
+    const labelRow = singleRow(
+      await db
+        .insert(labels)
+        .values({ ...label, projectId: row.id, createdAt: daysAgo(40) })
+        .returning({ id: labels.id }),
+    );
+    labelIds.set(`${project.key}/${label.name}`, labelRow.id);
+  }
 }
 
 const nextNumber = new Map<string, number>();
@@ -296,26 +346,33 @@ for (const issue of issuesByAge) {
   nextNumber.set(issue.project, number);
 
   const createdAt = daysAgo(issue.age, 3);
-  const [row] = await db
-    .insert(issues)
-    .values({
-      projectId: projectIdsByKey.get(issue.project)!,
-      number,
-      title: issue.title,
-      description: issue.description ?? '',
-      status: issue.status,
-      priority: issue.priority,
-      assigneeId: issue.assignee ? userIds[issue.assignee - 1] : null,
-      creatorId: userIds[issue.creator - 1],
-      createdAt,
-      updatedAt: daysAgo(Math.max(issue.age - 1, 0)),
-    })
-    .returning({ id: issues.id });
+  const row = singleRow(
+    await db
+      .insert(issues)
+      .values({
+        projectId: required(projectIdsByKey.get(issue.project), `project ${issue.project}`),
+        number,
+        title: issue.title,
+        description: issue.description ?? '',
+        status: issue.status,
+        priority: issue.priority,
+        assigneeId: issue.assignee ? userId(issue.assignee) : null,
+        creatorId: userId(issue.creator),
+        createdAt,
+        updatedAt: daysAgo(Math.max(issue.age - 1, 0)),
+      })
+      .returning({ id: issues.id }),
+  );
+
+  for (const name of issue.labels ?? []) {
+    const labelId = required(labelIds.get(`${issue.project}/${name}`), `label ${name}`);
+    await db.insert(issueLabels).values({ issueId: row.id, labelId });
+  }
 
   for (const [index, comment] of (issue.comments ?? []).entries()) {
     await db.insert(comments).values({
       issueId: row.id,
-      authorId: userIds[comment.author - 1],
+      authorId: userId(comment.author),
       body: comment.body,
       createdAt: daysAgo(issue.age, 2 - index),
     });
@@ -326,5 +383,5 @@ for (const issue of issuesByAge) {
 sqlite.close();
 
 console.log(
-  `Seeded ${seedUsers.length} users, ${seedProjects.length} projects, ${seedIssues.length} issues and ${commentCount} comments into ${config.databasePath}`,
+  `Seeded ${seedUsers.length} users, ${seedProjects.length} projects, ${seedLabels.length} labels per project, ${seedIssues.length} issues and ${commentCount} comments into ${config.databasePath}`,
 );

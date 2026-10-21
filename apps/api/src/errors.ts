@@ -5,7 +5,7 @@ import type { FastifyError, FastifyInstance } from 'fastify';
  * An error we expect and know how to describe to the client.
  * Services throw these; the central error handler turns them into the shared error format.
  */
-export class AppError extends Error {
+class AppError extends Error {
   readonly statusCode: number;
   readonly code: string;
   readonly details?: unknown;
@@ -31,6 +31,12 @@ export class BadRequestError extends AppError {
   }
 }
 
+export class ConflictError extends AppError {
+  constructor(message: string) {
+    super(409, 'CONFLICT', message);
+  }
+}
+
 function errorBody(code: string, message: string, details?: unknown): ApiErrorResponse {
   return details === undefined ? { error: { code, message } } : { error: { code, message, details } };
 }
@@ -43,9 +49,7 @@ export function registerErrorHandler(app: FastifyInstance) {
     }
 
     if (error.validation) {
-      return reply
-        .status(400)
-        .send(errorBody('VALIDATION_ERROR', error.message, error.validation));
+      return reply.status(400).send(errorBody('VALIDATION_ERROR', error.message, error.validation));
     }
 
     if (error.statusCode && error.statusCode < 500) {
