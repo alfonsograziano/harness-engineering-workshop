@@ -1,0 +1,19 @@
+- id: "1"
+  title: Labels in the data model and the API
+  description: >-
+    Covers CAP-1 and CAP-2 on the server, plus the label filter and the labels
+    in every issue response that CAP-3 and CAP-4 need.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Follow .claude/rules/backend.md and the add-api-endpoint skill. Seed a few
+    labels per project so the UI story has data to show.
+- id: "2"
+  title: Labels in the web app
+  description: >-
+    Covers CAP-2, CAP-3 and CAP-4 in the UI: chips in the list and on the board,
+    a label picker in the issue panel, and a label filter for both views.
+  spec_checkpoint: true
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Follow .claude/rules/frontend.md. Check the result in the browser with the
+    Playwright MCP before marking the story done.

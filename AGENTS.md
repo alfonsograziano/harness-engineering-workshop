@@ -50,7 +50,7 @@ packages/shared/src/  Types and constants used by both the API and the web app
 
 ## Specs
 
-New features start from a spec, not from code. The project uses [BMAD Method](https://docs.bmad-method.org/) v6 (`_bmad/`, skills named `bmad-*`). Planning documents go in `_bmad-output/planning-artifacts/`, stories in `_bmad-output/implementation-artifacts/`. If a story exists for the task, read it first and follow its acceptance criteria. If you are unsure which BMAD skill fits, use `bmad-help`.
+New features start from a spec, not from code. The project uses [BMAD Method](https://docs.bmad-method.org/) v6 (`_bmad/`, skills named `bmad-*`). Each spec is a folder `_bmad-output/specs/spec-<slug>/` with `SPEC.md` (the contract), `stories.yaml` (the order of work) and `stories/<id>-<slug>.md` (one story spec each). If a story exists for the task, read it and its SPEC.md first and follow the I/O matrix and acceptance criteria. Never change the part inside `<frozen-after-approval>`: that is the human's decision. If you are unsure which BMAD skill fits, use `bmad-help`.
 
 ## Tools
 
