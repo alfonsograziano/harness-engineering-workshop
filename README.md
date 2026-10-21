@@ -83,3 +83,4 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | --- | --- | --- | --- | --- |
 | 0 | `step-00-start` | The app, with no harness | | |
 | 1 | `step-01-agents-md` | `AGENTS.md` with commands, a map and the conventions; `CLAUDE.md` imports it | Guessing commands, putting code in the wrong layer, inventing a new error format | Context engineering → AGENTS.md |
+| 2 | `step-02-backend-rules` | `.claude/rules/backend.md`, loaded only when the agent works in `apps/api/` | A route with business logic, a service that queries the database, a schema that redeclares an enum | Context engineering → scoped rules |

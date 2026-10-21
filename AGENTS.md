@@ -53,3 +53,4 @@ packages/shared/src/  Types and constants used by both the API and the web app
 ## More docs
 
 - [README.md](README.md): what the app does, setup, the API at a glance
+- [.claude/rules/backend.md](.claude/rules/backend.md): how to write routes, schemas, services and repositories
