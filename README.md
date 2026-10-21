@@ -38,6 +38,8 @@ npm run dev
 | `npm run db:generate` | Generates a new SQL migration after a change to `apps/api/src/db/schema.ts` |
 | `npm test` | Runs all the tests with Vitest |
 | `npm run typecheck` | Type checks every workspace |
+| `npm run lint` | Lints and checks formatting with Biome |
+| `npm run format` | Formats the code with Biome |
 
 ## Project structure
 
@@ -98,3 +100,4 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | 8 | `step-08-labels-feature` | The labels feature, built from the two stories: tables and migration, API, seed data, chips, picker and filter | Code that drifts from what was agreed: every case in the story's I/O matrix was checked against the running API | Spec-driven development → the spec becomes code |
 | 9 | `step-09-unit-tests` | Vitest in every workspace: service tests on an in-memory database, route tests with `fastify.inject`, component tests with Testing Library. `npm test` | Saying "done" with nothing that proves it; breaking an old feature while building a new one | Verification → unit tests |
 | 10 | `step-10-typecheck` | `npm run typecheck` for every workspace, and stricter compiler options (`noUncheckedIndexedAccess` and friends); the errors they found are fixed | Code that only works on the happy path: `rows[0].id` when the query returned nothing, `match[1]` when the regex did not match | Verification → type check |
+| 11 | `step-11-linter` | Biome for linting, formatting and import order. `npm run lint`, `npm run format` | Style drift between sessions, and bugs a rule can catch: non-null assertions, inaccessible custom widgets, `autoFocus` | Verification → linter |

@@ -61,6 +61,7 @@ export function LabelPicker({ issue }: { issue: Issue }) {
 
       <form className="label-picker__new" onSubmit={handleCreate}>
         <input
+          className="label-picker__name"
           aria-label="New label name"
           placeholder="New label"
           value={name}
@@ -68,20 +69,20 @@ export function LabelPicker({ issue }: { issue: Issue }) {
           onChange={(event) => setName(event.target.value)}
           required
         />
-        <div className="label-picker__colors" role="radiogroup" aria-label="Label color">
+        <fieldset className="label-picker__colors" aria-label="Label color">
           {LABEL_COLORS.map((option) => (
-            <button
+            <input
               key={option}
-              type="button"
-              role="radio"
-              aria-checked={option === color}
+              type="radio"
+              name="label-color"
+              className="color-swatch"
               aria-label={option}
-              className={option === color ? 'color-swatch color-swatch--active' : 'color-swatch'}
+              checked={option === color}
               style={{ background: option }}
-              onClick={() => setColor(option)}
+              onChange={() => setColor(option)}
             />
           ))}
-        </div>
+        </fieldset>
         <button type="submit" className="button" disabled={createLabel.isPending}>
           Add
         </button>

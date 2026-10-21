@@ -1,5 +1,5 @@
-import type { CreateLabelInput, Issue, Label, SetIssueLabelsInput } from '@tasklane/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { CreateLabelInput, Issue, Label, SetIssueLabelsInput } from '@tasklane/shared';
 import { apiRequest } from './client';
 import { queryKeys } from './query-keys';
 

@@ -49,9 +49,7 @@ export function registerErrorHandler(app: FastifyInstance) {
     }
 
     if (error.validation) {
-      return reply
-        .status(400)
-        .send(errorBody('VALIDATION_ERROR', error.message, error.validation));
+      return reply.status(400).send(errorBody('VALIDATION_ERROR', error.message, error.validation));
     }
 
     if (error.statusCode && error.statusCode < 500) {

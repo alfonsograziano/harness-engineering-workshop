@@ -1,5 +1,5 @@
 import { ISSUE_PRIORITIES, type IssuePriority } from '@tasklane/shared';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { useCreateIssue } from '../api/issues';
 import { useUsers } from '../api/users';
 import { PRIORITY_LABELS } from '../lib/labels';
@@ -17,6 +17,12 @@ export function NewIssueForm({ projectKey, onClose }: NewIssueFormProps) {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<IssuePriority>('none');
   const [assigneeId, setAssigneeId] = useState('');
+  const titleRef = useRef<HTMLInputElement>(null);
+
+  // The form opens after a click on "New issue", so moving focus to the title is expected.
+  useEffect(() => {
+    titleRef.current?.focus();
+  }, []);
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -40,7 +46,7 @@ export function NewIssueForm({ projectKey, onClose }: NewIssueFormProps) {
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         required
-        autoFocus
+        ref={titleRef}
       />
       <textarea
         className="new-issue__description"

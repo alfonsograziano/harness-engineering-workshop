@@ -14,11 +14,7 @@ export const issueRoutes: FastifyPluginAsyncTypebox = async (app) => {
   });
 
   app.post('/projects/:key/issues', { schema: createIssueSchema }, async (request, reply) => {
-    const issue = await app.services.issues.create(
-      request.params.key,
-      request.body,
-      getCurrentUserId(request),
-    );
+    const issue = await app.services.issues.create(request.params.key, request.body, getCurrentUserId(request));
     return reply.status(201).send(issue);
   });
 

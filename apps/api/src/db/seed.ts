@@ -3,8 +3,8 @@ import type { IssuePriority, IssueStatus, LabelColor } from '@tasklane/shared';
 import { config } from '../config';
 import { toIso } from '../lib/time';
 import { createDatabase } from './client';
-import { singleRow } from './rows';
 import { runMigrations } from './migrate';
+import { singleRow } from './rows';
 import { comments, issueLabels, issues, labels, projects, users } from './schema';
 
 // Resets the local database and fills it with realistic data, so the app looks alive on first run.
@@ -350,17 +350,17 @@ for (const issue of issuesByAge) {
     await db
       .insert(issues)
       .values({
-      projectId: required(projectIdsByKey.get(issue.project), `project ${issue.project}`),
-      number,
-      title: issue.title,
-      description: issue.description ?? '',
-      status: issue.status,
-      priority: issue.priority,
-      assigneeId: issue.assignee ? userId(issue.assignee) : null,
-      creatorId: userId(issue.creator),
-      createdAt,
-      updatedAt: daysAgo(Math.max(issue.age - 1, 0)),
-    })
+        projectId: required(projectIdsByKey.get(issue.project), `project ${issue.project}`),
+        number,
+        title: issue.title,
+        description: issue.description ?? '',
+        status: issue.status,
+        priority: issue.priority,
+        assigneeId: issue.assignee ? userId(issue.assignee) : null,
+        creatorId: userId(issue.creator),
+        createdAt,
+        updatedAt: daysAgo(Math.max(issue.age - 1, 0)),
+      })
       .returning({ id: issues.id }),
   );
 

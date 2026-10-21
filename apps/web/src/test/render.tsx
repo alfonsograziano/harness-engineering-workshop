@@ -1,5 +1,5 @@
-import type { Issue, Label } from '@tasklane/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { Issue, Label } from '@tasklane/shared';
 import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';

@@ -7,7 +7,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ value, onChange }: ViewToggleProps) {
   return (
-    <div className="view-toggle" role="group" aria-label="View">
+    <fieldset className="view-toggle" aria-label="View">
       {(['list', 'board'] as const).map((view) => (
         <button
           key={view}
@@ -19,6 +19,6 @@ export function ViewToggle({ value, onChange }: ViewToggleProps) {
           {view === 'list' ? 'List' : 'Board'}
         </button>
       ))}
-    </div>
+    </fieldset>
   );
 }

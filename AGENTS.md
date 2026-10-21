@@ -15,6 +15,8 @@ Run every command from the repository root.
 | `npm test` | Runs every test once (Vitest, all workspaces) |
 | `npm run test:watch` | Runs the tests in watch mode |
 | `npm run typecheck` | Type checks every workspace with `tsc --noEmit` |
+| `npm run lint` | Biome: lint rules, formatting and import order, read-only |
+| `npm run format` | Biome: formats files and applies the safe lint fixes |
 | `npm run db:generate` | Creates a SQL migration from `apps/api/src/db/schema.ts` |
 
 To add a dependency to one workspace: `npm install <pkg> -w @tasklane/api` (or `@tasklane/web`, `@tasklane/shared`).
@@ -63,6 +65,7 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 ## Before you say you are done
 
 - `npm test` passes, and new behavior has a test.
+- `npm run lint` passes. Run `npm run format` first; fix what is left by hand.
 - `npm run typecheck` passes. Do not silence an error with `any`, `as` or `!`: fix the type.
 - The app still starts with `npm run dev`.
 - New API types are in `packages/shared`, and the web app uses them.

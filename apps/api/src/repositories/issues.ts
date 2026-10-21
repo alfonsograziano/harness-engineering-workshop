@@ -1,6 +1,6 @@
+import type { IssueStatus } from '@tasklane/shared';
 import { and, desc, eq, inArray, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/sqlite-core';
-import type { IssueStatus } from '@tasklane/shared';
 import type { Database } from '../db/client';
 import { singleRow } from '../db/rows';
 import { issueLabels, issues, projects, users } from '../db/schema';
