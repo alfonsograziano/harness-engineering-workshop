@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+
+# Local SQLite database
+apps/api/data/
+
+# Environment files
+.env
+.env.*
+!.env.example

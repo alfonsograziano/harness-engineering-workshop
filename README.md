@@ -1,0 +1,76 @@
+# Tasklane
+
+A small Linear-style issue tracker. It is the starting point of a workshop on harness engineering: the app on `main` is a normal, well written project with no harness at all.
+
+> The `harness` branch adds the harness one commit at a time: agent instructions, scoped rules, a skill, MCP, a spec, then tests, type checks, linting, dead code detection, structural tests, hooks, guardrails, a pre-commit hook, CI and an adversarial reviewer. Each commit has a `step-NN-*` tag.
+
+## What it does
+
+- Fake users from the seed. There is no login: pick the current user from the menu in the sidebar.
+- Projects with a short key, for example `WEB`.
+- Issues with a readable identifier (`WEB-12`), a title, a description, a status (backlog, todo, in progress, done, canceled), a priority (none, low, medium, high, urgent) and an assignee.
+- A list view and a board view (kanban by status). Status changes go through a menu, not drag and drop.
+- An issue detail panel with comments.
+
+## Getting started
+
+You need Node.js 24 (see `.nvmrc`).
+
+```bash
+npm install
+npm run db:seed
+npm run dev
+```
+
+- Web app: http://localhost:5173
+- API: http://localhost:3001 (the web app proxies `/api` to it)
+
+`npm run db:seed` deletes the local database and creates a fresh one with realistic data. The database is a SQLite file in `apps/api/data/`, opened with the built-in `node:sqlite` module, so there is nothing else to install or run.
+
+## Scripts
+
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Starts the API and the web app in watch mode |
+| `npm run build` | Builds the web app |
+| `npm run db:seed` | Resets the local database and fills it with sample data |
+| `npm run db:generate` | Generates a new SQL migration after a change to `apps/api/src/db/schema.ts` |
+
+## Project structure
+
+```
+apps/
+  api/                 Fastify 5 + TypeBox + Drizzle ORM on SQLite
+    drizzle/           SQL migrations, applied when the server starts
+    src/
+      routes/          HTTP routes, one file per resource
+      schemas/         TypeBox schemas for the routes, one file per resource
+      services/        Business logic
+      repositories/    Database access with Drizzle
+      db/              Database client, schema, migrations runner, seed
+      errors.ts        Error classes and the central error handler
+  web/                 React 19 + Vite + React Router + TanStack Query
+    src/
+      api/             API client and TanStack Query hooks
+      components/      Reusable components
+      pages/           Route components
+      lib/             Small helpers
+packages/
+  shared/              Types and constants shared by the API and the web app
+```
+
+## API at a glance
+
+| Method | Path | |
+| --- | --- | --- |
+| GET | `/api/users` | List users |
+| GET | `/api/projects` | List projects |
+| GET | `/api/projects/:key` | Get a project |
+| GET | `/api/projects/:key/issues` | List the issues of a project (`?status=`, `?assigneeId=`) |
+| POST | `/api/projects/:key/issues` | Create an issue (needs `x-user-id`) |
+| GET | `/api/issues/:identifier` | Get an issue, for example `WEB-12` |
+| PATCH | `/api/issues/:identifier` | Update an issue |
+| GET | `/api/issues/:identifier/comments` | List comments |
+| POST | `/api/issues/:identifier/comments` | Add a comment (needs `x-user-id`) |
+
+Errors always look like `{ "error": { "code": "NOT_FOUND", "message": "..." } }`. Timestamps are ISO 8601 strings in UTC.

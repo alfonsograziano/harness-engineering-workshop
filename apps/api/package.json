@@ -1,0 +1,24 @@
+{
+  "name": "@tasklane/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --disable-warning=ExperimentalWarning src/server.ts",
+    "start": "tsx --disable-warning=ExperimentalWarning src/server.ts",
+    "db:seed": "tsx --disable-warning=ExperimentalWarning src/db/seed.ts",
+    "db:generate": "drizzle-kit generate"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15"
+  },
+  "dependencies": {
+    "@fastify/type-provider-typebox": "^6.3.0",
+    "@tasklane/shared": "^0.0.0",
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.12.7",
+    "typebox": "^1.4.2"
+  }
+}

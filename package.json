@@ -1,0 +1,23 @@
+{
+  "name": "tasklane",
+  "private": true,
+  "description": "A small Linear-style issue tracker used in the harness engineering workshop.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently --names api,web --prefix-colors cyan,magenta \"npm run dev -w @tasklane/api\" \"npm run dev -w @tasklane/web\"",
+    "build": "npm run build -w @tasklane/web",
+    "db:seed": "npm run db:seed -w @tasklane/api",
+    "db:generate": "npm run db:generate -w @tasklane/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5",
+    "typescript": "~5.9.3"
+  }
+}
