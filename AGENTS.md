@@ -44,6 +44,10 @@ packages/shared/src/  Types and constants used by both the API and the web app
 - **Current user.** There is no login. Endpoints that create something read the user from the `x-user-id` header with `getCurrentUserId()`.
 - **Frontend data.** Components never call `fetch`. They use the hooks in `apps/web/src/api/`.
 
+## Skills
+
+- `add-api-endpoint` (`.claude/skills/add-api-endpoint/`): the full checklist for a new endpoint, from shared type to web hook. Use it whenever you add or change an API route.
+
 ## Before you say you are done
 
 - The app still starts with `npm run dev`.
