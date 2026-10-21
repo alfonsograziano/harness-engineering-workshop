@@ -1,5 +1,6 @@
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import type { Database } from '../db/client';
+import { singleRow } from '../db/rows';
 import { issueLabels, labels } from '../db/schema';
 
 export type LabelRow = typeof labels.$inferSelect;
@@ -35,8 +36,7 @@ export function createLabelRepository(db: Database) {
     },
 
     async insert(values: typeof labels.$inferInsert) {
-      const rows = await db.insert(labels).values(values).returning({ id: labels.id });
-      return rows[0].id;
+      return singleRow(await db.insert(labels).values(values).returning({ id: labels.id })).id;
     },
 
     /** The labels of many issues in one query, sorted by name. */

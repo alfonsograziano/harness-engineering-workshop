@@ -3,6 +3,7 @@ import type { IssuePriority, IssueStatus, LabelColor } from '@tasklane/shared';
 import { config } from '../config';
 import { toIso } from '../lib/time';
 import { createDatabase } from './client';
+import { singleRow } from './rows';
 import { runMigrations } from './migrate';
 import { comments, issueLabels, issues, labels, projects, users } from './schema';
 
@@ -303,21 +304,34 @@ const userIds = await db
   .returning({ id: users.id })
   .then((rows) => rows.map((row) => row.id));
 
+/** Seed entries refer to users by position (1-5) and to labels by name. A typo there should fail loudly. */
+function required<T>(value: T | undefined, what: string): T {
+  if (value === undefined) {
+    throw new Error(`Seed data refers to an unknown ${what}`);
+  }
+  return value;
+}
+const userId = (position: number) => required(userIds[position - 1], `user #${position}`);
+
 const projectIdsByKey = new Map<string, number>();
 const labelIds = new Map<string, number>();
 for (const project of seedProjects) {
   const issueCount = seedIssues.filter((issue) => issue.project === project.key).length;
-  const [row] = await db
-    .insert(projects)
-    .values({ ...project, issueCounter: issueCount, createdAt: daysAgo(40) })
-    .returning({ id: projects.id });
+  const row = singleRow(
+    await db
+      .insert(projects)
+      .values({ ...project, issueCounter: issueCount, createdAt: daysAgo(40) })
+      .returning({ id: projects.id }),
+  );
   projectIdsByKey.set(project.key, row.id);
 
   for (const label of seedLabels) {
-    const [labelRow] = await db
-      .insert(labels)
-      .values({ ...label, projectId: row.id, createdAt: daysAgo(40) })
-      .returning({ id: labels.id });
+    const labelRow = singleRow(
+      await db
+        .insert(labels)
+        .values({ ...label, projectId: row.id, createdAt: daysAgo(40) })
+        .returning({ id: labels.id }),
+    );
     labelIds.set(`${project.key}/${label.name}`, labelRow.id);
   }
 }
@@ -332,30 +346,33 @@ for (const issue of issuesByAge) {
   nextNumber.set(issue.project, number);
 
   const createdAt = daysAgo(issue.age, 3);
-  const [row] = await db
-    .insert(issues)
-    .values({
-      projectId: projectIdsByKey.get(issue.project)!,
+  const row = singleRow(
+    await db
+      .insert(issues)
+      .values({
+      projectId: required(projectIdsByKey.get(issue.project), `project ${issue.project}`),
       number,
       title: issue.title,
       description: issue.description ?? '',
       status: issue.status,
       priority: issue.priority,
-      assigneeId: issue.assignee ? userIds[issue.assignee - 1] : null,
-      creatorId: userIds[issue.creator - 1],
+      assigneeId: issue.assignee ? userId(issue.assignee) : null,
+      creatorId: userId(issue.creator),
       createdAt,
       updatedAt: daysAgo(Math.max(issue.age - 1, 0)),
     })
-    .returning({ id: issues.id });
+      .returning({ id: issues.id }),
+  );
 
   for (const name of issue.labels ?? []) {
-    await db.insert(issueLabels).values({ issueId: row.id, labelId: labelIds.get(`${issue.project}/${name}`)! });
+    const labelId = required(labelIds.get(`${issue.project}/${name}`), `label ${name}`);
+    await db.insert(issueLabels).values({ issueId: row.id, labelId });
   }
 
   for (const [index, comment] of (issue.comments ?? []).entries()) {
     await db.insert(comments).values({
       issueId: row.id,
-      authorId: userIds[comment.author - 1],
+      authorId: userId(comment.author),
       body: comment.body,
       createdAt: daysAgo(issue.age, 2 - index),
     });

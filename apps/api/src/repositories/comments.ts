@@ -1,5 +1,6 @@
 import { asc, eq } from 'drizzle-orm';
 import type { Database } from '../db/client';
+import { singleRow } from '../db/rows';
 import { comments, users } from '../db/schema';
 
 const commentWithAuthor = {
@@ -29,8 +30,7 @@ export function createCommentRepository(db: Database) {
     },
 
     async insert(values: typeof comments.$inferInsert) {
-      const rows = await db.insert(comments).values(values).returning({ id: comments.id });
-      return rows[0].id;
+      return singleRow(await db.insert(comments).values(values).returning({ id: comments.id })).id;
     },
   };
 }

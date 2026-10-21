@@ -16,7 +16,8 @@
     "db:seed": "npm run db:seed -w @tasklane/api",
     "db:generate": "npm run db:generate -w @tasklane/api",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p . && npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",

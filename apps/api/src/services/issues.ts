@@ -51,6 +51,14 @@ export function createIssueService({ issues, labels, projects, users }: IssueSer
     );
   }
 
+  async function withLabel(record: IssueRecord): Promise<Issue> {
+    const rows = await labels.listForIssues([record.issue.id]);
+    return toIssue(
+      record,
+      rows.map((row) => row.label),
+    );
+  }
+
   async function findProject(projectKey: string) {
     const project = await projects.findByKey(projectKey);
     if (!project) {
@@ -74,8 +82,7 @@ export function createIssueService({ issues, labels, projects, users }: IssueSer
     if (!record) {
       throw new NotFoundError('Issue', id);
     }
-    const [issue] = await withLabels([record]);
-    return issue;
+    return withLabel(record);
   }
 
   return {
@@ -87,8 +94,7 @@ export function createIssueService({ issues, labels, projects, users }: IssueSer
     },
 
     async getByIdentifier(identifier: string): Promise<Issue> {
-      const [issue] = await withLabels([await findRecord(identifier)]);
-      return issue;
+      return withLabel(await findRecord(identifier));
     },
 
     async create(projectKey: string, input: CreateIssueInput, creatorId: number): Promise<Issue> {

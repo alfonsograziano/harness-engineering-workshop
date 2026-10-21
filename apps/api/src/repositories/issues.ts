@@ -2,6 +2,7 @@ import { and, desc, eq, inArray, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/sqlite-core';
 import type { IssueStatus } from '@tasklane/shared';
 import type { Database } from '../db/client';
+import { singleRow } from '../db/rows';
 import { issueLabels, issues, projects, users } from '../db/schema';
 
 const assignee = alias(users, 'assignee');
@@ -67,8 +68,7 @@ export function createIssueRepository(db: Database) {
     },
 
     async insert(values: NewIssueRow) {
-      const rows = await db.insert(issues).values(values).returning({ id: issues.id });
-      return rows[0].id;
+      return singleRow(await db.insert(issues).values(values).returning({ id: issues.id })).id;
     },
 
     async update(id: number, values: Partial<NewIssueRow>) {
