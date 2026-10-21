@@ -6,6 +6,7 @@ import { formatDate } from '../lib/dates';
 import { PRIORITY_LABELS } from '../lib/labels';
 import { CommentSection } from './CommentSection';
 import { ErrorMessage } from './ErrorMessage';
+import { LabelPicker } from './LabelPicker';
 import { StatusSelect } from './StatusSelect';
 
 export function IssueDetail({ issue }: { issue: Issue }) {
@@ -70,6 +71,10 @@ export function IssueDetail({ issue }: { issue: Issue }) {
               </option>
             ))}
           </select>
+        </dd>
+        <dt>Labels</dt>
+        <dd>
+          <LabelPicker issue={issue} />
         </dd>
         <dt>Created</dt>
         <dd>

@@ -2,7 +2,7 @@
 title: 'Labels in the data model and the API'
 type: 'feature'
 created: '2026-10-21'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -75,6 +75,10 @@ context:
 - Given the seeded data, when `GET /api/projects/WEB/issues?labelId=<bug id>` is called, then every returned issue carries that label and no other issue does.
 
 ## Implementation Notes
+
+- 2026-10-21: Implemented. New migration `0001_labels.sql`; the unique index is on `(project_id, lower(name))`.
+- 2026-10-21: Deviation from the code map: `PUT /issues/:identifier/labels` and its schema live in `routes/issues.ts` and `schemas/issues.ts`, not in the label files. `IssueSchema` needs `LabelSchema`, so putting the PUT schema in `schemas/labels.ts` would create a circular import between the two schema files.
+- 2026-10-21: Every row of the I/O matrix checked with curl against a freshly seeded database. There are no automated tests in the repo yet.
 
 ## Spec Change Log
 

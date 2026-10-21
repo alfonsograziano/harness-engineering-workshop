@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { STATUS_LABELS } from '../lib/labels';
 import { Avatar } from './Avatar';
 import { IssueStatusControl } from './IssueStatusControl';
+import { LabelList } from './LabelList';
 import { PriorityIcon } from './PriorityIcon';
 
 export function IssueBoard({ issues }: { issues: Issue[] }) {
@@ -24,6 +25,7 @@ export function IssueBoard({ issues }: { issues: Issue[] }) {
                 <Link to={`issues/${issue.identifier}`} className="card__title">
                   {issue.title}
                 </Link>
+                <LabelList labels={issue.labels} />
                 <div className="card__bottom">
                   <PriorityIcon priority={issue.priority} />
                   <IssueStatusControl issue={issue} />

@@ -31,6 +31,12 @@ export class BadRequestError extends AppError {
   }
 }
 
+export class ConflictError extends AppError {
+  constructor(message: string) {
+    super(409, 'CONFLICT', message);
+  }
+}
+
 function errorBody(code: string, message: string, details?: unknown): ApiErrorResponse {
   return details === undefined ? { error: { code, message } } : { error: { code, message, details } };
 }

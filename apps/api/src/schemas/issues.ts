@@ -1,5 +1,7 @@
+import { MAX_LABELS_PER_ISSUE } from '@tasklane/shared';
 import { Type } from 'typebox';
 import { ErrorResponseSchema, IsoDateSchema, IssuePrioritySchema, IssueStatusSchema } from './common';
+import { LabelSchema } from './labels';
 import { ProjectKeyParamsSchema } from './projects';
 import { UserSchema } from './users';
 
@@ -14,6 +16,7 @@ export const IssueSchema = Type.Object({
   priority: IssuePrioritySchema,
   assignee: Type.Union([UserSchema, Type.Null()]),
   creator: UserSchema,
+  labels: Type.Array(LabelSchema),
   createdAt: IsoDateSchema,
   updatedAt: IsoDateSchema,
 });
@@ -27,6 +30,7 @@ export const listProjectIssuesSchema = {
   querystring: Type.Object({
     status: Type.Optional(IssueStatusSchema),
     assigneeId: Type.Optional(Type.Integer({ minimum: 1 })),
+    labelId: Type.Optional(Type.Integer({ minimum: 1 })),
   }),
   response: {
     200: Type.Array(IssueSchema),
@@ -72,6 +76,21 @@ export const updateIssueSchema = {
       assigneeId: Type.Optional(Type.Union([Type.Integer({ minimum: 1 }), Type.Null()])),
     },
     { additionalProperties: false, minProperties: 1 },
+  ),
+  response: {
+    200: IssueSchema,
+    400: ErrorResponseSchema,
+    404: ErrorResponseSchema,
+  },
+};
+
+export const setIssueLabelsSchema = {
+  params: IssueIdentifierParamsSchema,
+  body: Type.Object(
+    {
+      labelIds: Type.Array(Type.Integer({ minimum: 1 }), { maxItems: MAX_LABELS_PER_ISSUE }),
+    },
+    { additionalProperties: false },
   ),
   response: {
     200: IssueSchema,

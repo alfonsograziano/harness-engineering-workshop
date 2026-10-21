@@ -11,6 +11,7 @@ A small Linear-style issue tracker. It is the starting point of a workshop on ha
 - Issues with a readable identifier (`WEB-12`), a title, a description, a status (backlog, todo, in progress, done, canceled), a priority (none, low, medium, high, urgent) and an assignee.
 - A list view and a board view (kanban by status). Status changes go through a menu, not drag and drop.
 - An issue detail panel with comments.
+- Labels per project, shown as chips, set from the issue panel, with a label filter for both views.
 
 ## Getting started
 
@@ -66,10 +67,13 @@ packages/
 | GET | `/api/users` | List users |
 | GET | `/api/projects` | List projects |
 | GET | `/api/projects/:key` | Get a project |
-| GET | `/api/projects/:key/issues` | List the issues of a project (`?status=`, `?assigneeId=`) |
+| GET | `/api/projects/:key/issues` | List the issues of a project (`?status=`, `?assigneeId=`, `?labelId=`) |
 | POST | `/api/projects/:key/issues` | Create an issue (needs `x-user-id`) |
 | GET | `/api/issues/:identifier` | Get an issue, for example `WEB-12` |
 | PATCH | `/api/issues/:identifier` | Update an issue |
+| PUT | `/api/issues/:identifier/labels` | Replace the labels of an issue (`{ labelIds }`, at most 5) |
+| GET | `/api/projects/:key/labels` | List the labels of a project |
+| POST | `/api/projects/:key/labels` | Create a label (`{ name, color }`, color from the shared palette) |
 | GET | `/api/issues/:identifier/comments` | List comments |
 | POST | `/api/issues/:identifier/comments` | Add a comment (needs `x-user-id`) |
 
@@ -89,3 +93,4 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | 5 | `step-05-mcp` | `.mcp.json` with the Playwright MCP server, so the agent can open the app and look at the UI | Saying a UI change works without ever seeing it; asking a human for a screenshot | Context engineering → MCP |
 | 6 | `step-06-bmad` | BMAD Method v6.12.4, installed by its own installer: `_bmad/` and the `bmad-*` skills | Jumping from a one-line request straight to code, with every open decision guessed | Spec-driven development → frameworks (BMAD) |
 | 7 | `step-07-first-spec` | The first spec, made with BMAD: labels on issues. `SPEC.md`, the decision log, `stories.yaml` and two story specs. No code | Building a feature on guesses: shared or per-project labels? how many per issue? what happens on a duplicate name? | Spec-driven development → spec, plan, stories |
+| 8 | `step-08-labels-feature` | The labels feature, built from the two stories: tables and migration, API, seed data, chips, picker and filter | Code that drifts from what was agreed: every case in the story's I/O matrix was checked against the running API | Spec-driven development → the spec becomes code |

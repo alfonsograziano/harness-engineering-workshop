@@ -4,6 +4,7 @@ import { formatRelative } from '../lib/dates';
 import { STATUS_LABELS } from '../lib/labels';
 import { Avatar } from './Avatar';
 import { IssueStatusControl } from './IssueStatusControl';
+import { LabelList } from './LabelList';
 import { PriorityIcon } from './PriorityIcon';
 
 export function IssueList({ issues }: { issues: Issue[] }) {
@@ -26,6 +27,9 @@ export function IssueList({ issues }: { issues: Issue[] }) {
                   <span className="issue-row__identifier">{issue.identifier}</span>
                   <span className="issue-row__title">{issue.title}</span>
                 </Link>
+                <span className="issue-row__labels">
+                  <LabelList labels={issue.labels} />
+                </span>
                 <IssueStatusControl issue={issue} />
                 <span className="issue-row__date">{formatRelative(issue.updatedAt)}</span>
                 <Avatar user={issue.assignee} />

@@ -4,6 +4,7 @@ import {
   createIssueSchema,
   getIssueSchema,
   listProjectIssuesSchema,
+  setIssueLabelsSchema,
   updateIssueSchema,
 } from '../schemas/issues';
 
@@ -27,5 +28,9 @@ export const issueRoutes: FastifyPluginAsyncTypebox = async (app) => {
 
   app.patch('/issues/:identifier', { schema: updateIssueSchema }, async (request) => {
     return app.services.issues.update(request.params.identifier, request.body);
+  });
+
+  app.put('/issues/:identifier/labels', { schema: setIssueLabelsSchema }, async (request) => {
+    return app.services.labels.setIssueLabels(request.params.identifier, request.body);
   });
 };

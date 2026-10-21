@@ -1,5 +1,6 @@
-import { ISSUE_PRIORITIES, ISSUE_STATUSES } from '@tasklane/shared';
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { ISSUE_PRIORITIES, ISSUE_STATUSES, LABEL_COLORS } from '@tasklane/shared';
+import { sql } from 'drizzle-orm';
+import { integer, primaryKey, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 // Timestamps are stored as ISO 8601 strings in UTC. See src/lib/time.ts.
 
@@ -52,3 +53,31 @@ export const comments = sqliteTable('comments', {
   body: text('body').notNull(),
   createdAt: text('created_at').notNull(),
 });
+
+export const labels = sqliteTable(
+  'labels',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    projectId: integer('project_id')
+      .notNull()
+      .references(() => projects.id),
+    name: text('name').notNull(),
+    color: text('color', { enum: LABEL_COLORS }).notNull(),
+    createdAt: text('created_at').notNull(),
+  },
+  // Label names are unique per project, ignoring case.
+  (table) => [uniqueIndex('labels_project_name_unique').on(table.projectId, sql`lower(${table.name})`)],
+);
+
+export const issueLabels = sqliteTable(
+  'issue_labels',
+  {
+    issueId: integer('issue_id')
+      .notNull()
+      .references(() => issues.id, { onDelete: 'cascade' }),
+    labelId: integer('label_id')
+      .notNull()
+      .references(() => labels.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.issueId, table.labelId] })],
+);

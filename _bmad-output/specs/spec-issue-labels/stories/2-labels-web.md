@@ -2,7 +2,7 @@
 title: 'Labels in the web app'
 type: 'feature'
 created: '2026-10-21'
-status: 'ready-for-dev'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 context:
@@ -63,6 +63,10 @@ context:
 - Given the board filtered by `bug`, when a `bug` label is removed from an issue in the panel, then that card leaves the board without a reload.
 
 ## Implementation Notes
+
+- 2026-10-21: Implemented. `LabelList` wraps the chips so the list row keeps its grid when an issue has no labels.
+- 2026-10-21: The filter uses `?label=<id>`; the issue list query key includes the filter, and label changes invalidate every list of the project.
+- 2026-10-21: Checked in the browser: board filtered by `bug`, `bug` added to WEB-3 from the panel (the card appears without a reload), new label `copy` created and added.
 
 ## Spec Change Log
 

@@ -1,8 +1,8 @@
-import { and, desc, eq, type SQL } from 'drizzle-orm';
+import { and, desc, eq, inArray, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/sqlite-core';
 import type { IssueStatus } from '@tasklane/shared';
 import type { Database } from '../db/client';
-import { issues, projects, users } from '../db/schema';
+import { issueLabels, issues, projects, users } from '../db/schema';
 
 const assignee = alias(users, 'assignee');
 const creator = alias(users, 'creator');
@@ -20,6 +20,7 @@ export type NewIssueRow = typeof issues.$inferInsert;
 export interface IssueFilters {
   status?: IssueStatus;
   assigneeId?: number;
+  labelId?: number;
 }
 
 export function createIssueRepository(db: Database) {
@@ -40,6 +41,13 @@ export function createIssueRepository(db: Database) {
       }
       if (filters.assigneeId) {
         conditions.push(eq(issues.assigneeId, filters.assigneeId));
+      }
+      if (filters.labelId) {
+        const labelled = db
+          .select({ issueId: issueLabels.issueId })
+          .from(issueLabels)
+          .where(eq(issueLabels.labelId, filters.labelId));
+        conditions.push(inArray(issues.id, labelled));
       }
       return selectIssues()
         .where(and(...conditions))
