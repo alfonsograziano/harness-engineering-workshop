@@ -74,3 +74,12 @@ packages/
 | POST | `/api/issues/:identifier/comments` | Add a comment (needs `x-user-id`) |
 
 Errors always look like `{ "error": { "code": "NOT_FOUND", "message": "..." } }`. Timestamps are ISO 8601 strings in UTC.
+
+## The harness, step by step
+
+This branch adds the harness one layer per commit. Every commit has a tag, so you can jump to any step with `git checkout step-NN-name`, and every commit message explains why the layer exists.
+
+| Step | Tag | What it adds | The agent mistake it prevents | Workshop idea |
+| --- | --- | --- | --- | --- |
+| 0 | `step-00-start` | The app, with no harness | | |
+| 1 | `step-01-agents-md` | `AGENTS.md` with commands, a map and the conventions; `CLAUDE.md` imports it | Guessing commands, putting code in the wrong layer, inventing a new error format | Context engineering → AGENTS.md |
