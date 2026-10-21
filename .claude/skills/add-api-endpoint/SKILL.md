@@ -51,11 +51,15 @@ Add the query key to `apps/web/src/api/query-keys.ts`, then a `useQuery` or `use
 
 Example: [examples/web-hook.ts](examples/web-hook.ts)
 
-## 8. Docs
+## 8. Tests
+
+Add service tests with `createTestServices()` and route tests with `createTestApp()` and `app.inject()` (see `apps/api/src/routes/labels.test.ts`). Cover the happy path, a 404 for an unknown parent, and a 400 for a bad body. Run `npm test`.
+
+## 9. Docs
 
 Add the endpoint to the "API at a glance" table in `README.md`.
 
-## 9. Check it
+## 10. Check it
 
 Start the API (`npm run dev`) and call the endpoint with curl. Check the happy path, a 404 and a 400:
 

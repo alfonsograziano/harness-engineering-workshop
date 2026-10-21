@@ -57,3 +57,9 @@ Codes are UPPER_SNAKE_CASE. Validation errors from schemas become `VALIDATION_ER
 - Never edit a migration that is already committed. Write a new one.
 - Columns use `snake_case` in SQL and `camelCase` in TypeScript. Timestamps are `text` columns with ISO strings.
 - If you add sample data, add it to `src/db/seed.ts` too.
+
+## Tests
+
+- Services: `src/services/<resource>.test.ts`, with `createTestServices()` from `src/test/test-app.ts`. It gives you a fresh in-memory database with the real migrations and a small fixture (users 1 and 2, projects WEB and API, issue WEB-1).
+- Routes: `src/routes/<resource>.test.ts`, with `createTestApp()` and `app.inject()`. Assert the status code and the full error body, not just "it failed".
+- When a story has an I/O matrix, every row becomes a test.

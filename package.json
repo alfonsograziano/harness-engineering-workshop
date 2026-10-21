@@ -14,10 +14,17 @@
     "dev": "concurrently --names api,web --prefix-colors cyan,magenta \"npm run dev -w @tasklane/api\" \"npm run dev -w @tasklane/web\"",
     "build": "npm run build -w @tasklane/web",
     "db:seed": "npm run db:seed -w @tasklane/api",
-    "db:generate": "npm run db:generate -w @tasklane/api"
+    "db:generate": "npm run db:generate -w @tasklane/api",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "concurrently": "^9.2.5",
-    "typescript": "~5.9.3"
+    "jsdom": "^29.1.1",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.5"
   }
 }

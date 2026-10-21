@@ -36,6 +36,7 @@ npm run dev
 | `npm run build` | Builds the web app |
 | `npm run db:seed` | Resets the local database and fills it with sample data |
 | `npm run db:generate` | Generates a new SQL migration after a change to `apps/api/src/db/schema.ts` |
+| `npm test` | Runs all the tests with Vitest |
 
 ## Project structure
 
@@ -94,3 +95,4 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | 6 | `step-06-bmad` | BMAD Method v6.12.4, installed by its own installer: `_bmad/` and the `bmad-*` skills | Jumping from a one-line request straight to code, with every open decision guessed | Spec-driven development → frameworks (BMAD) |
 | 7 | `step-07-first-spec` | The first spec, made with BMAD: labels on issues. `SPEC.md`, the decision log, `stories.yaml` and two story specs. No code | Building a feature on guesses: shared or per-project labels? how many per issue? what happens on a duplicate name? | Spec-driven development → spec, plan, stories |
 | 8 | `step-08-labels-feature` | The labels feature, built from the two stories: tables and migration, API, seed data, chips, picker and filter | Code that drifts from what was agreed: every case in the story's I/O matrix was checked against the running API | Spec-driven development → the spec becomes code |
+| 9 | `step-09-unit-tests` | Vitest in every workspace: service tests on an in-memory database, route tests with `fastify.inject`, component tests with Testing Library. `npm test` | Saying "done" with nothing that proves it; breaking an old feature while building a new one | Verification → unit tests |

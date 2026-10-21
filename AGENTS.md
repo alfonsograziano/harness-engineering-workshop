@@ -12,6 +12,8 @@ Run every command from the repository root.
 | `npm run db:seed` | Deletes the local SQLite database and seeds a fresh one |
 | `npm run dev` | Starts the API on :3001 and the web app on :5173 |
 | `npm run build` | Builds the web app |
+| `npm test` | Runs every test once (Vitest, all workspaces) |
+| `npm run test:watch` | Runs the tests in watch mode |
 | `npm run db:generate` | Creates a SQL migration from `apps/api/src/db/schema.ts` |
 
 To add a dependency to one workspace: `npm install <pkg> -w @tasklane/api` (or `@tasklane/web`, `@tasklane/shared`).
@@ -43,6 +45,7 @@ packages/shared/src/  Types and constants used by both the API and the web app
 - **Schema changes.** Edit `apps/api/src/db/schema.ts`, then run `npm run db:generate`. Migrations run when the server starts.
 - **Current user.** There is no login. Endpoints that create something read the user from the `x-user-id` header with `getCurrentUserId()`.
 - **Frontend data.** Components never call `fetch`. They use the hooks in `apps/web/src/api/`.
+- **Tests.** Next to the code, as `<file>.test.ts(x)`. API tests get a fresh in-memory database from `apps/api/src/test/test-app.ts`; web tests render with `apps/web/src/test/render.tsx` and mock `fetch` with `mockApi()`. A bug fix starts with a failing test.
 
 ## Skills
 
@@ -58,6 +61,7 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 
 ## Before you say you are done
 
+- `npm test` passes, and new behavior has a test.
 - The app still starts with `npm run dev`.
 - New API types are in `packages/shared`, and the web app uses them.
 - `README.md` is updated if you changed a command or an endpoint.

@@ -46,3 +46,10 @@ export function useComments(identifier: string) {
 - Show errors with `<ErrorMessage error={...} />`. Show loading with the `muted` class.
 - Styles live in `src/styles.css` with BEM-like class names (`issue-row__title`, `button--primary`). Use the CSS variables in `:root` for colors.
 - Interactive elements need an accessible name (`aria-label` on selects and icon buttons).
+
+## Tests
+
+- Component tests sit next to the component: `Component.test.tsx`. Render with `renderWithProviders()` from `src/test/render.tsx`, which adds a QueryClient and a router.
+- Mock the API with `mockApi({ 'GET /api/...': () => data })`. Do not mock the hooks: going through them is the point.
+- Query by role and accessible name (`getByRole('checkbox', { name: /bug/ })`), not by class name.
+- Build test data with `makeIssue()` so a new field on `Issue` is added in one place.
