@@ -65,9 +65,9 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 
 - **Playwright MCP** (`.mcp.json`). After a change to `apps/web/`, start the app with `npm run dev`, open http://localhost:5173 with the Playwright tools and check the screen you changed. Use it for UI checks only; for the API, curl is faster.
 
-## Hooks
+## Hooks and guardrails
 
-`.claude/settings.json` runs two hooks. After every edit, the file is formatted and linted and its workspace is type checked. When you stop, `npm run check` runs if anything changed. A hook message is an instruction: fix what it reports before you continue.
+`.claude/settings.json` runs three hooks. Before an edit, protected files are blocked: committed migrations, Drizzle metadata, the lockfile, `.env` files and the harness itself (lint, knip and arch configs, settings, hooks). After an edit, the file is formatted and linted and its workspace is type checked. When you stop, `npm run check` runs if anything changed. A hook message is an instruction: do what it says. Reading `.env`, `git push --force` and `rm -r` are denied.
 
 ## Before you say you are done
 
