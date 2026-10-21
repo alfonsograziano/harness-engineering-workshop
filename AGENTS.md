@@ -48,6 +48,10 @@ packages/shared/src/  Types and constants used by both the API and the web app
 
 - `add-api-endpoint` (`.claude/skills/add-api-endpoint/`): the full checklist for a new endpoint, from shared type to web hook. Use it whenever you add or change an API route.
 
+## Tools
+
+- **Playwright MCP** (`.mcp.json`). After a change to `apps/web/`, start the app with `npm run dev`, open http://localhost:5173 with the Playwright tools and check the screen you changed. Use it for UI checks only; for the API, curl is faster.
+
 ## Before you say you are done
 
 - The app still starts with `npm run dev`.
