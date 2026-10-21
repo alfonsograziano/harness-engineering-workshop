@@ -53,17 +53,15 @@ packages/shared/src/  Types and constants used by both the API and the web app
 - **Frontend data.** Components never call `fetch`. They use the hooks in `apps/web/src/api/`.
 - **Tests.** Next to the code, as `<file>.test.ts(x)`. API tests get a fresh in-memory database from `apps/api/src/test/test-app.ts`; web tests render with `apps/web/src/test/render.tsx` and mock `fetch` with `mockApi()`. A bug fix starts with a failing test.
 
-## Skills
-
-- `add-api-endpoint` (`.claude/skills/add-api-endpoint/`): the full checklist for a new endpoint, from shared type to web hook. Use it whenever you add or change an API route.
-
 ## Specs
 
 New features start from a spec, not from code. The project uses [BMAD Method](https://docs.bmad-method.org/) v6 (`_bmad/`, skills named `bmad-*`). Each spec is a folder `_bmad-output/specs/spec-<slug>/` with `SPEC.md` (the contract), `stories.yaml` (the order of work) and `stories/<id>-<slug>.md` (one story spec each). If a story exists for the task, read it and its SPEC.md first and follow the I/O matrix and acceptance criteria. Never change the part inside `<frozen-after-approval>`: that is the human's decision. If you are unsure which BMAD skill fits, use `bmad-help`.
 
-## Tools
+## Skills, tools and review
 
-- **Playwright MCP** (`.mcp.json`). After a change to `apps/web/`, start the app with `npm run dev`, open http://localhost:5173 with the Playwright tools and check the screen you changed. Use it for UI checks only; for the API, curl is faster.
+- `add-api-endpoint` skill: the full checklist for a new endpoint, from shared type to web hook. Use it whenever you add or change an API route.
+- Playwright MCP (`.mcp.json`): after a change to `apps/web/`, open http://localhost:5173 and check the screen you changed. For the API, curl is faster.
+- `/adversarial-review`: before a pull request. It sends the diff to the `reviewer` subagent (`.claude/agents/reviewer.md`), a fresh session told to assume there is a bug.
 
 ## Hooks and guardrails
 
@@ -85,11 +83,7 @@ When a check fails:
 - Tests: fix the code, not the test, unless the test encodes behavior the task changed on purpose. Say so if it does.
 - Typecheck: fix the type. Do not silence it with `any`, `as` or `!`.
 
-Also:
-
-- New behavior has a test.
-- The app still starts with `npm run dev`; after a UI change, look at it with the Playwright MCP.
-- `README.md` is updated if you changed a command or an endpoint.
+Also: new behavior has a test, a UI change was looked at with the Playwright MCP, and `README.md` is updated if a command or an endpoint changed.
 
 ## More docs
 

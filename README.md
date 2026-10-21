@@ -111,3 +111,11 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | 16 | `step-16-guardrails` | Permission deny rules (`.env`, `git push --force`, `rm -rf`) and a hook that blocks edits to committed migrations, the lockfile, `.env` and the harness config | Editing a migration that already ran; hand-editing the lockfile; reading secrets; weakening a check to make it pass | Verification → guardrails |
 | 17 | `step-17-pre-commit` | A git pre-commit hook with lefthook: Biome on the staged files, typecheck, gitleaks. Installed by `npm install`. `--no-verify` is denied to the agent | A commit with a type error or a leaked API key, from a human or an agent that skipped the checks | Verification → pre-commit |
 | 18 | `step-18-ci` | GitHub Actions on every pull request: `npm ci`, `npm run check`, the build, and gitleaks over the whole branch | Merging code nobody checked on a clean machine; a secret that slipped past a laptop without gitleaks | Verification → CI, the pre-merge gate |
+| 19 | `step-19-adversarial-review` | A `reviewer` subagent that sees only the diff and AGENTS.md and assumes there is a bug, plus the `/adversarial-review` command that runs it and sorts its findings | The author reviewing its own work with the same blind spots that produced the bug | Verification → adversarial review |
+
+## Using the harness
+
+- Open the repo in Claude Code. `CLAUDE.md` loads `AGENTS.md`; the rules load when the agent touches `apps/api/` or `apps/web/`.
+- Hooks run on their own. The agent cannot finish while `npm run check` is red.
+- Before a pull request, run `/adversarial-review`.
+- New features start from a spec: ask for one with the `bmad-spec` skill, then build it story by story.
