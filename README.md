@@ -15,7 +15,7 @@ A small Linear-style issue tracker. It is the starting point of a workshop on ha
 
 ## Getting started
 
-You need Node.js 24 (see `.nvmrc`).
+You need Node.js 24 (see `.nvmrc`). For the secret scan in the pre-commit hook, also install [gitleaks](https://github.com/gitleaks/gitleaks) (`brew install gitleaks`); without it the hook skips that one check and CI still runs it.
 
 ```bash
 npm install
@@ -109,3 +109,4 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | 14 | `step-14-check-script` | `npm run check`: every check in one command, fastest first. AGENTS.md: you are not done until it is green | Running two of five checks and calling it done; not knowing which checks exist | Verification → one command for the agent |
 | 15 | `step-15-hooks` | Claude Code hooks: after every edit, format, lint and type check that file's workspace; when the agent stops, `npm run check`, and if it is red the agent has to keep going | Forgetting to run the checks at all; stopping with a red build and saying "done" | Verification → hooks |
 | 16 | `step-16-guardrails` | Permission deny rules (`.env`, `git push --force`, `rm -rf`) and a hook that blocks edits to committed migrations, the lockfile, `.env` and the harness config | Editing a migration that already ran; hand-editing the lockfile; reading secrets; weakening a check to make it pass | Verification → guardrails |
+| 17 | `step-17-pre-commit` | A git pre-commit hook with lefthook: Biome on the staged files, typecheck, gitleaks. Installed by `npm install`. `--no-verify` is denied to the agent | A commit with a type error or a leaked API key, from a human or an agent that skipped the checks | Verification → pre-commit |

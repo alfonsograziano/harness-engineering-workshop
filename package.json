@@ -11,6 +11,7 @@
     "node": ">=24.0.0"
   },
   "scripts": {
+    "prepare": "lefthook install",
     "dev": "concurrently --names api,web --prefix-colors cyan,magenta \"npm run dev -w @tasklane/api\" \"npm run dev -w @tasklane/web\"",
     "build": "npm run build -w @tasklane/web",
     "db:seed": "npm run db:seed -w @tasklane/api",
@@ -33,6 +34,7 @@
     "dependency-cruiser": "^18.7.0",
     "jsdom": "^29.1.1",
     "knip": "^6.42.1",
+    "lefthook": "^2.2.2",
     "typescript": "~5.9.3",
     "vitest": "^5.0.5"
   }

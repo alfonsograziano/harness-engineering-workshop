@@ -11,7 +11,9 @@
       "Bash(git push * -f*)",
       "Bash(rm -rf *)",
       "Bash(rm -fr *)",
-      "Bash(rm -r *)"
+      "Bash(rm -r *)",
+      "Bash(git commit *--no-verify*)",
+      "Bash(git commit -n*)"
     ]
   },
   "hooks": {

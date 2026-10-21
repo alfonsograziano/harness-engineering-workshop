@@ -67,7 +67,9 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 
 ## Hooks and guardrails
 
-`.claude/settings.json` runs three hooks. Before an edit, protected files are blocked: committed migrations, Drizzle metadata, the lockfile, `.env` files and the harness itself (lint, knip and arch configs, settings, hooks). After an edit, the file is formatted and linted and its workspace is type checked. When you stop, `npm run check` runs if anything changed. A hook message is an instruction: do what it says. Reading `.env`, `git push --force` and `rm -r` are denied.
+`.claude/settings.json` runs three hooks. Before an edit, protected files are blocked: committed migrations, Drizzle metadata, the lockfile, `.env` files and the harness itself (lint, knip and arch configs, settings, hooks). After an edit, the file is formatted and linted and its workspace is type checked. When you stop, `npm run check` runs if anything changed. A hook message is an instruction: do what it says. Reading `.env`, `git push --force`, `git commit --no-verify` and `rm -r` are denied.
+
+A git pre-commit hook (lefthook, `lefthook.yml`) lints the staged files, type checks, and scans for secrets with gitleaks. If it fails, fix the cause; never skip it.
 
 ## Before you say you are done
 
