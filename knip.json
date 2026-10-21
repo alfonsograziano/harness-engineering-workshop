@@ -1,4 +1,9 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [".claude/hooks/check-*.mjs"]
+    }
+  },
   "ignore": [".claude/skills/add-api-endpoint/examples/**"]
 }
