@@ -21,7 +21,8 @@
     "lint": "biome check .",
     "format": "biome check --write .",
     "knip": "knip",
-    "arch": "depcruise apps packages --config .dependency-cruiser.cjs --output-type err-long"
+    "arch": "depcruise apps packages --config .dependency-cruiser.cjs --output-type err-long",
+    "check": "npm run lint && npm run arch && npm run knip && npm test && npm run typecheck"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

@@ -42,6 +42,7 @@ npm run dev
 | `npm run format` | Formats the code with Biome |
 | `npm run knip` | Finds unused files, exports and dependencies |
 | `npm run arch` | Checks the architecture rules with dependency-cruiser |
+| `npm run check` | Runs every check above, fastest first |
 
 ## Project structure
 
@@ -105,3 +106,4 @@ This branch adds the harness one layer per commit. Every commit has a tag, so yo
 | 11 | `step-11-linter` | Biome for linting, formatting and import order. `npm run lint`, `npm run format` | Style drift between sessions, and bugs a rule can catch: non-null assertions, inaccessible custom widgets, `autoFocus` | Verification → linter |
 | 12 | `step-12-dead-code` | Knip for unused files, exports and dependencies. `npm run knip`. What it found is removed | Dead code that the next session reads, trusts and copies as if it were the pattern to follow | Verification → dead code |
 | 13 | `step-13-structural-tests` | dependency-cruiser rules: routes never touch data access, services never query or see HTTP, web never imports the API, shared is a leaf, no runtime cycles. `npm run arch` | A route that queries the database "just this once"; a type copied from `apps/api` into the web app | Verification → structural tests |
+| 14 | `step-14-check-script` | `npm run check`: every check in one command, fastest first. AGENTS.md: you are not done until it is green | Running two of five checks and calling it done; not knowing which checks exist | Verification → one command for the agent |

@@ -19,6 +19,7 @@ Run every command from the repository root.
 | `npm run format` | Biome: formats files and applies the safe lint fixes |
 | `npm run knip` | Finds unused files, exports and dependencies |
 | `npm run arch` | Checks the architecture rules in `.dependency-cruiser.cjs` |
+| `npm run check` | **All of the above**, fastest first: lint, arch, knip, test, typecheck (about 5 s) |
 | `npm run db:generate` | Creates a SQL migration from `apps/api/src/db/schema.ts` |
 
 To add a dependency to one workspace: `npm install <pkg> -w @tasklane/api` (or `@tasklane/web`, `@tasklane/shared`).
@@ -66,13 +67,20 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 
 ## Before you say you are done
 
-- `npm test` passes, and new behavior has a test.
-- `npm run lint` passes. Run `npm run format` first; fix what is left by hand.
-- `npm run knip` passes. If it flags something you just wrote, either use it or delete it. Do not leave code "for later".
-- `npm run arch` passes. If a rule blocks you, follow its message; do not edit `.dependency-cruiser.cjs` to make it pass.
-- `npm run typecheck` passes. Do not silence an error with `any`, `as` or `!`: fix the type.
-- The app still starts with `npm run dev`.
-- New API types are in `packages/shared`, and the web app uses them.
+**`npm run check` must be green.** It runs every check in the repo, fastest first, and stops at the first failure. Read the error, fix the cause, run it again. Do not say you are done, and do not ask for review, while it is red.
+
+When a check fails:
+
+- Lint: run `npm run format`, then fix what is left by hand.
+- Arch: follow the rule's message. Do not edit `.dependency-cruiser.cjs` to make it pass.
+- Knip: use what you exported, or delete it. Do not leave code "for later".
+- Tests: fix the code, not the test, unless the test encodes behavior the task changed on purpose. Say so if it does.
+- Typecheck: fix the type. Do not silence it with `any`, `as` or `!`.
+
+Also:
+
+- New behavior has a test.
+- The app still starts with `npm run dev`; after a UI change, look at it with the Playwright MCP.
 - `README.md` is updated if you changed a command or an endpoint.
 
 ## More docs
