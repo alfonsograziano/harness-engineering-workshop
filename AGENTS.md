@@ -48,6 +48,10 @@ packages/shared/src/  Types and constants used by both the API and the web app
 
 - `add-api-endpoint` (`.claude/skills/add-api-endpoint/`): the full checklist for a new endpoint, from shared type to web hook. Use it whenever you add or change an API route.
 
+## Specs
+
+New features start from a spec, not from code. The project uses [BMAD Method](https://docs.bmad-method.org/) v6 (`_bmad/`, skills named `bmad-*`). Planning documents go in `_bmad-output/planning-artifacts/`, stories in `_bmad-output/implementation-artifacts/`. If a story exists for the task, read it first and follow its acceptance criteria. If you are unsure which BMAD skill fits, use `bmad-help`.
+
 ## Tools
 
 - **Playwright MCP** (`.mcp.json`). After a change to `apps/web/`, start the app with `npm run dev`, open http://localhost:5173 with the Playwright tools and check the screen you changed. Use it for UI checks only; for the API, curl is faster.

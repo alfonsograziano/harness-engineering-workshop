@@ -10,3 +10,6 @@ apps/api/data/
 .env
 .env.*
 !.env.example
+
+# BMAD: personal install answers
+_bmad/config.user.toml
