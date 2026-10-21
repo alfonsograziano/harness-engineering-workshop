@@ -1,0 +1,9 @@
+# gitleaks config: the default rules, plus the few files we know are not secrets.
+# Every entry needs a reason. Never allowlist a file to hide a real key: rotate the key instead.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "BMAD's install manifest: one SHA-256 hash per installed file, not secrets"
+paths = ['''^_bmad/_config/files-manifest\.csv$''']

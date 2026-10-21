@@ -71,6 +71,8 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 
 A git pre-commit hook (lefthook, `lefthook.yml`) lints the staged files, type checks, and scans for secrets with gitleaks. If it fails, fix the cause; never skip it.
 
+CI (`.github/workflows/ci.yml`) runs `npm run check`, the build and gitleaks on every pull request. A pull request is ready for review only when CI is green.
+
 ## Before you say you are done
 
 **`npm run check` must be green.** It runs every check in the repo, fastest first, and stops at the first failure. Read the error, fix the cause, run it again. Do not say you are done, and do not ask for review, while it is red.
