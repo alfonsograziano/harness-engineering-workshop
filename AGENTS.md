@@ -18,6 +18,7 @@ Run every command from the repository root.
 | `npm run lint` | Biome: lint rules, formatting and import order, read-only |
 | `npm run format` | Biome: formats files and applies the safe lint fixes |
 | `npm run knip` | Finds unused files, exports and dependencies |
+| `npm run arch` | Checks the architecture rules in `.dependency-cruiser.cjs` |
 | `npm run db:generate` | Creates a SQL migration from `apps/api/src/db/schema.ts` |
 
 To add a dependency to one workspace: `npm install <pkg> -w @tasklane/api` (or `@tasklane/web`, `@tasklane/shared`).
@@ -42,7 +43,7 @@ packages/shared/src/  Types and constants used by both the API and the web app
 
 ## Conventions
 
-- **Layers.** `routes/ → services/ → repositories/`. A route never imports a repository, `drizzle-orm` or `db/`. A service never touches `request` or `reply`.
+- **Layers.** `routes/ → services/ → repositories/`. A route never imports a repository, `drizzle-orm` or `db/`. A service never touches `request` or `reply`. `npm run arch` enforces this, plus: the web app never imports `apps/api`, and `packages/shared` never imports an app.
 - **Errors.** Every error response is `{ "error": { "code", "message", "details?" } }`. Throw `NotFoundError` or `BadRequestError` (or a new `AppError` subclass) from a service and let the handler in `errors.ts` format it. Never call `reply.status(4xx).send(...)` by hand.
 - **Dates.** Always UTC, always ISO 8601 strings. Get "now" from `nowIso()` in `apps/api/src/lib/time.ts`. Never store local time or epoch numbers.
 - **Shared types.** A type that crosses the API boundary lives in `packages/shared` and is imported from `@tasklane/shared` on both sides. Do not redeclare it.
@@ -68,6 +69,7 @@ New features start from a spec, not from code. The project uses [BMAD Method](ht
 - `npm test` passes, and new behavior has a test.
 - `npm run lint` passes. Run `npm run format` first; fix what is left by hand.
 - `npm run knip` passes. If it flags something you just wrote, either use it or delete it. Do not leave code "for later".
+- `npm run arch` passes. If a rule blocks you, follow its message; do not edit `.dependency-cruiser.cjs` to make it pass.
 - `npm run typecheck` passes. Do not silence an error with `any`, `as` or `!`: fix the type.
 - The app still starts with `npm run dev`.
 - New API types are in `packages/shared`, and the web app uses them.
